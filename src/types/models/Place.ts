@@ -5,6 +5,5 @@ export interface Place {
     description: string;
     lat: number;
     lng: number;
-    prefferedTemperatureUnit: TemperatureUnit;
 }
 

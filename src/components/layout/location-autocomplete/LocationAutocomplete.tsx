@@ -12,7 +12,6 @@ import usePlacesAutocomplete, {
     getLatLng,
 } from "use-places-autocomplete";
 import { Place } from "../../../types/models/Place";
-import { TemperatureUnit } from "../../../types/models/TemperatureUnit";
 import { useTranslation } from "react-i18next";
 
 const StyledInput = styled(InputBase)({
@@ -55,7 +54,6 @@ export default function LocationAutocomplete() {
                     description: selectedPlace!.description,
                     lat,
                     lng,
-                    prefferedTemperatureUnit: TemperatureUnit.Celsius,
                 };
 
                 console.log(newPlace);

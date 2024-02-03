@@ -10,6 +10,8 @@ import createCache from "@emotion/cache";
 import rtlPlugin from "stylis-plugin-rtl";
 import { CacheProvider } from "@emotion/react";
 import { defaultTheme } from "./utils/theme";
+import { Provider } from "react-redux";
+import { store } from "./redux/app/store";
 
 const rtlCache = createCache({
     key: "muirtl",
@@ -44,7 +46,9 @@ function App() {
                             padding: "1.5rem",
                         }}
                     >
-                        <Home />
+                        <Provider store={store}>
+                            <Home />
+                        </Provider>
                     </Box>
                 </Suspense>
             </ThemeProvider>

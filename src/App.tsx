@@ -5,7 +5,9 @@ import Home from "./components/pages/home/Home";
 function App() {
     return (
         <Suspense fallback={<div>Loading...</div>}>
-            <Box sx={{ display: "flex", minHeight: "100vh", padding: "2rem" }}>
+            <Box
+                sx={{ display: "flex", minHeight: "100vh", padding: "1.5rem" }}
+            >
                 <Home />
             </Box>
         </Suspense>

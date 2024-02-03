@@ -1,4 +1,5 @@
 import { createTheme } from "@mui/material";
+import { Shadows } from "@mui/material";
 
 declare module "@mui/material/styles" {
     interface Palette {
@@ -13,6 +14,8 @@ declare module "@mui/material/styles" {
         orange?: PaletteOptions["primary"];
     }
 }
+
+const originalTheme = createTheme({});
 
 export const defaultTheme = createTheme({
     palette: {
@@ -32,5 +35,12 @@ export const defaultTheme = createTheme({
     typography: {
         fontFamily: "Jost, sans-serif",
     },
+    shadows: originalTheme.shadows.map((shadow, index) => {
+        if (index === 1) {
+            return "#00000029 0 3px 6px";
+        }
+
+        return shadow;
+    }) as Shadows,
 });
 

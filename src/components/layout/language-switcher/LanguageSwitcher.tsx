@@ -38,7 +38,7 @@ export default function LanguageSwitcher() {
                 slotProps: {
                     paper: {
                         sx: {
-                            boxShadow: "#00000029 0 3px 6px",
+                            boxShadow: 1,
                         },
                     },
                 },

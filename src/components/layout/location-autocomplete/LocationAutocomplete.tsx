@@ -14,12 +14,12 @@ import usePlacesAutocomplete, {
 import { Place } from "../../../types/models/Place";
 import { useTranslation } from "react-i18next";
 
-const StyledInput = styled(InputBase)({
+const StyledInput = styled(InputBase)(({ theme }) => ({
     "& .MuiInputBase-input": {
-        boxShadow: "#00000029 0 3px 6px",
+        boxShadow: theme.shadows[1],
         padding: "10px 12px",
     },
-});
+}));
 
 export default function LocationAutocomplete() {
     const { t } = useTranslation();
@@ -76,7 +76,7 @@ export default function LocationAutocomplete() {
                         paper: {
                             sx: {
                                 marginTop: "10px",
-                                boxShadow: "#00000029 0 3px 6px",
+                                boxShadow: 1,
                             },
                         },
                     }}
@@ -128,7 +128,7 @@ export default function LocationAutocomplete() {
                         py: "10px",
                         px: "43.5px",
                         backgroundColor: "blue.main",
-                        boxShadow: "#00000029 0 3px 6px",
+                        boxShadow: 1,
                     }}
                 >
                     {t("locationAutocomplete.addButton")}

@@ -13,6 +13,7 @@ import usePlacesAutocomplete, {
 } from "use-places-autocomplete";
 import { Place } from "../../../types/models/Place";
 import { TemperatureUnit } from "../../../types/models/TemperatureUnit";
+import { useTranslation } from "react-i18next";
 
 const StyledInput = styled(InputBase)({
     "& .MuiInputBase-input": {
@@ -22,6 +23,7 @@ const StyledInput = styled(InputBase)({
 });
 
 export default function LocationAutocomplete() {
+    const { t } = useTranslation();
     const [selectedPlace, setSelectedPlace] = useState<{
         placeId: string;
         description: string;
@@ -85,6 +87,7 @@ export default function LocationAutocomplete() {
                     filterOptions={(o) => o}
                     disableClearable
                     getOptionLabel={(option) => option.description}
+                    noOptionsText={t("locationAutocomplete.noOptions")}
                     onInputChange={(event, newInputValue) => {
                         setValue(newInputValue);
                     }}
@@ -100,7 +103,15 @@ export default function LocationAutocomplete() {
                     inputValue={value}
                     renderInput={(params) => {
                         const { InputLabelProps, InputProps, ...rest } = params;
-                        return <StyledInput {...params.InputProps} {...rest} />;
+                        return (
+                            <StyledInput
+                                {...params.InputProps}
+                                {...rest}
+                                placeholder={t(
+                                    "locationAutocomplete.placeholder"
+                                )}
+                            />
+                        );
                     }}
                     renderOption={(props, option) => {
                         return (
@@ -122,7 +133,7 @@ export default function LocationAutocomplete() {
                         boxShadow: "#00000029 0 3px 6px",
                     }}
                 >
-                    Add
+                    {t("locationAutocomplete.addButton")}
                 </Button>
             </Box>
         </form>

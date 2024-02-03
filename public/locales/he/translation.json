@@ -1,3 +1,5 @@
 {
-    "greeting": "שלום"
+    "locationAutocomplete.placeholder": "הזן את שם העיר",
+    "locationAutocomplete.noOptions": "אין הצעות מיקום",
+    "locationAutocomplete.addButton": "לְהוֹסִיף"
 }

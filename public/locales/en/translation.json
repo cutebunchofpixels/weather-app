@@ -1,3 +1,5 @@
 {
-    "greeting": "Hello"
+    "locationAutocomplete.placeholder": "Enter city name",
+    "locationAutocomplete.noOptions": "No location suggestions",
+    "locationAutocomplete.addButton": "Add"
 }

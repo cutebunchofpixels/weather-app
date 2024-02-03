@@ -1,3 +1,5 @@
 {
-    "greeting": "Вітаю"
+    "locationAutocomplete.placeholder": "Введіть назву міста",
+    "locationAutocomplete.noOptions": "Немає підказок",
+    "locationAutocomplete.addButton": "Додати"
 }

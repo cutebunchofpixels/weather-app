@@ -18,6 +18,15 @@ declare module "@mui/material/styles" {
 const originalTheme = createTheme({});
 
 export const defaultTheme = createTheme({
+    components: {
+        MuiCssBaseline: {
+            styleOverrides: (themeParam) => `
+        body {
+          color: #000;
+        }
+      `,
+        },
+    },
     palette: {
         blue: {
             main: "#459DE9",
@@ -29,7 +38,8 @@ export const defaultTheme = createTheme({
             dark: "#8D8D8D",
         },
         orange: {
-            main: "#FFFAF1",
+            main: "#FFA25B",
+            light: "#FFFAF1",
         },
     },
     typography: {

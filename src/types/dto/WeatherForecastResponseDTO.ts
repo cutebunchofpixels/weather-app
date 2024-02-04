@@ -13,10 +13,12 @@ export interface WeatherForecastResponseDTO {
         weather: Weather[];
     };
 
-    daily: {
-        temp: {
-            max: number;
-        };
-    };
+    daily: [
+        {
+            temp: {
+                max: number;
+            };
+        }
+    ];
 }
 

@@ -11,7 +11,8 @@ import rtlPlugin from "stylis-plugin-rtl";
 import { CacheProvider } from "@emotion/react";
 import { defaultTheme } from "./utils/theme";
 import { Provider } from "react-redux";
-import { store } from "./redux/app/store";
+import { persistor, store } from "./redux/app/store";
+import { PersistGate } from "redux-persist/integration/react";
 
 const rtlCache = createCache({
     key: "muirtl",
@@ -39,17 +40,22 @@ function App() {
             <ThemeProvider theme={theme}>
                 <CssBaseline />
                 <Suspense fallback={<div>Loading...</div>}>
-                    <Box
-                        sx={{
-                            display: "flex",
-                            minHeight: "100vh",
-                            padding: "1.5rem",
-                        }}
+                    <PersistGate
+                        loading={<div>Loading...</div>}
+                        persistor={persistor}
                     >
-                        <Provider store={store}>
-                            <Home />
-                        </Provider>
-                    </Box>
+                        <Box
+                            sx={{
+                                display: "flex",
+                                minHeight: "100vh",
+                                padding: "1.5rem",
+                            }}
+                        >
+                            <Provider store={store}>
+                                <Home />
+                            </Provider>
+                        </Box>
+                    </PersistGate>
                 </Suspense>
             </ThemeProvider>
         </CacheProvider>

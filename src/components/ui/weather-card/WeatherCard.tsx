@@ -16,6 +16,8 @@ import { dummyWeatherForecast } from "./dummy-weather-forecast";
 import { useTranslation } from "react-i18next";
 import { capitalize } from "../../../utils/capitalize";
 import { useState } from "react";
+import { useAppDispatch } from "../../../redux/app/hooks";
+import { removePlace } from "../../../redux/features/places/placesSlice";
 
 const Container = styled(Box, {
     shouldForwardProp: (propName) => propName !== "isTempFreezing",
@@ -50,6 +52,7 @@ function getPreferredUnits(placeId: string) {
 
 export default function WeatherCard({ place }: { place: Place }) {
     const { t, i18n } = useTranslation();
+    const dispatch = useAppDispatch();
     const [preferredUnits, setPreferredUnits] = useState<MeasurementSystem>(
         () => getPreferredUnits(place.placeId)
     );
@@ -97,6 +100,7 @@ export default function WeatherCard({ place }: { place: Place }) {
     return (
         <Container isTempFreezing={isTempFreezing}>
             <IconButton
+                onClick={() => dispatch(removePlace(place.placeId))}
                 sx={{
                     padding: 0,
                     alignSelf: "end",

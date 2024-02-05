@@ -13,6 +13,9 @@ import usePlacesAutocomplete, {
 } from "use-places-autocomplete";
 import { Place } from "../../../types/models/Place";
 import { useTranslation } from "react-i18next";
+import { useAppDispatch } from "../../../redux/app/hooks";
+import { addPlace } from "../../../redux/features/places/placesSlice";
+import { ArrayElement } from "../../../types/helpers/ArrayElement";
 
 const StyledInput = styled(InputBase)(({ theme }) => ({
     "& .MuiInputBase-input": {
@@ -21,12 +24,15 @@ const StyledInput = styled(InputBase)(({ theme }) => ({
     },
 }));
 
+type AutocompletePrediction = ArrayElement<
+    ReturnType<typeof usePlacesAutocomplete>["suggestions"]["data"]
+>;
+
 export default function LocationAutocomplete() {
     const { t } = useTranslation();
-    const [selectedPlace, setSelectedPlace] = useState<{
-        placeId: string;
-        description: string;
-    } | null>(null);
+    const [selectedPlace, setSelectedPlace] =
+        useState<AutocompletePrediction | null>(null);
+    const dispatch = useAppDispatch();
 
     const {
         value,
@@ -45,18 +51,20 @@ export default function LocationAutocomplete() {
                 e.preventDefault();
 
                 const results = await getGeocode({
-                    placeId: selectedPlace!.placeId,
+                    placeId: selectedPlace!.place_id,
                 });
+
                 const { lat, lng } = getLatLng(results[0]);
 
                 const newPlace: Place = {
-                    placeId: selectedPlace!.placeId,
+                    placeId: selectedPlace!.place_id,
                     description: selectedPlace!.description,
                     lat,
                     lng,
                 };
 
-                console.log(newPlace);
+                dispatch(addPlace(newPlace));
+                setSelectedPlace(null);
             }}
         >
             <Box
@@ -67,38 +75,23 @@ export default function LocationAutocomplete() {
                 }}
             >
                 <Autocomplete
-                    ListboxProps={{
-                        sx: {
-                            padding: 0,
-                        },
-                    }}
-                    slotProps={{
-                        paper: {
-                            sx: {
-                                marginTop: "10px",
-                                boxShadow: 1,
-                            },
-                        },
-                    }}
+                    value={selectedPlace}
+                    disableClearable={selectedPlace !== null}
+                    inputValue={value}
                     options={data}
                     forcePopupIcon={false}
                     filterOptions={(o) => o}
-                    disableClearable
                     getOptionLabel={(option) => option.description}
                     noOptionsText={t("locationAutocomplete.noOptions")}
-                    onInputChange={(event, newInputValue) => {
+                    onInputChange={(e, newInputValue) => {
                         setValue(newInputValue);
                     }}
-                    onChange={async (event, newValue) => {
-                        setSelectedPlace({
-                            placeId: newValue.place_id,
-                            description: newValue.description,
-                        });
+                    onChange={async (e, newValue) => {
+                        setSelectedPlace(newValue);
                     }}
                     isOptionEqualToValue={(option, value) =>
                         option.place_id === value.place_id
                     }
-                    inputValue={value}
                     renderInput={(params) => {
                         const { InputLabelProps, InputProps, ...rest } = params;
                         return (
@@ -117,6 +110,19 @@ export default function LocationAutocomplete() {
                                 {option.description}
                             </MenuItem>
                         );
+                    }}
+                    ListboxProps={{
+                        sx: {
+                            padding: 0,
+                        },
+                    }}
+                    slotProps={{
+                        paper: {
+                            sx: {
+                                marginTop: "10px",
+                                boxShadow: 1,
+                            },
+                        },
                     }}
                 />
                 <Button

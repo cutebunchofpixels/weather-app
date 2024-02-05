@@ -1,22 +1,11 @@
 import { Box } from "@mui/material";
 import LanguageSwitcher from "../../layout/language-switcher/LanguageSwitcher";
 import LocationAutocomplete from "../../layout/location-autocomplete/LocationAutocomplete";
-import WeatherCard from "../../ui/weather-card/WeatherCard";
+import WeatherCardList from "../../layout/weather-card-list/WeatherCardList";
+import { useAppSelector } from "../../../redux/app/hooks";
 
 export default function Home() {
-    const cherkasy = {
-        placeId: "ChIJf5dkYIZL0UAR2LXLqSPn3Pg",
-        description: "Cherkasy, Cherkasy Oblast, Ukraine",
-        lat: 49.44131549999999,
-        lng: 32.0643442,
-    };
-
-    const place = {
-        placeId: "ChIJOwg_06VPwokRYv534QaPC8g",
-        description: "New York, NY, USA",
-        lat: 40.7127753,
-        lng: -74.0059728,
-    };
+    const places = useAppSelector((state) => state.places.places);
 
     return (
         <Box sx={{ display: "flex", flexDirection: "column", flexGrow: "1" }}>
@@ -33,12 +22,13 @@ export default function Home() {
             <Box
                 sx={{
                     mt: "122px",
-                    maxHeight: "500px",
-                    maxWidth: "500px",
-                    display: "flex",
+                    display: "grid",
+                    gridTemplateColumns: "repeat(auto-fit, 350px)",
+                    gap: "30px",
+                    justifyContent: "center",
                 }}
             >
-                <WeatherCard place={place} />
+                <WeatherCardList places={places} />
             </Box>
         </Box>
     );

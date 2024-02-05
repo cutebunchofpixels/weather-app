@@ -25,8 +25,8 @@ const Container = styled(Box, {
     backgroundColor: isTempFreezing
         ? theme.palette.blue.light
         : theme.palette.orange.light,
-    height: "257px",
-    width: "350px",
+    maxWidth: "350px",
+    width: "100%",
     boxShadow: theme.shadows[1],
     borderRadius: "5px",
     padding: "10px 15px",
@@ -47,7 +47,7 @@ function getPreferredUnits(placeId: string) {
         return MeasurementSystem.Metric;
     }
 
-    return JSON.parse(preferredUnitsJSON)[placeId];
+    return JSON.parse(preferredUnitsJSON)[placeId] || MeasurementSystem.Metric;
 }
 
 export default function WeatherCard({ place }: { place: Place }) {
@@ -150,7 +150,11 @@ export default function WeatherCard({ place }: { place: Place }) {
                             }}
                             src={`${process.env.REACT_APP_OPEN_WEATHER_API_IMG_URL}/${weatherForecast.current.weather[0].icon}@2x.png`}
                         />
-                        <Typography fontSize="13px" color="gray.main">
+                        <Typography
+                            fontSize="13px"
+                            color="gray.main"
+                            maxWidth="65px"
+                        >
                             {capitalize(
                                 weatherForecast.current.weather[0].description
                             )}

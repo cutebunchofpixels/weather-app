@@ -5,5 +5,6 @@
     "weatherCard.wind": "רוּחַ",
     "weatherCard.humidity": "לחות",
     "weatherCard.pressure": "לַחַץ",
-    "weatherCard.feelsLike": "מרגיש כמו"
+    "weatherCard.feelsLike": "מרגיש כמו",
+    "weatherCardList.noPlaces": "עדיין אין מה להראות. נסה להוסיף עיר באמצעות הקלט למעלה!"
 }

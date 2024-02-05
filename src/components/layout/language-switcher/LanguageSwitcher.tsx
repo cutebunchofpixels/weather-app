@@ -4,6 +4,10 @@ import { useTranslation } from "react-i18next";
 import LanguageIcon from "@mui/icons-material/Language";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import { styled } from "@mui/material/styles";
+import { dayjs } from "../../../utils/dayjs";
+import "dayjs/locale/en";
+import "dayjs/locale/he";
+import "dayjs/locale/uk";
 
 const StyledExpandMoreIcon = styled(ExpandMoreIcon)(({ theme }) => ({
     color: theme.palette.gray.main,
@@ -15,7 +19,10 @@ export default function LanguageSwitcher() {
     return (
         <Select
             value={i18n.resolvedLanguage}
-            onChange={(e) => i18n.changeLanguage(e.target.value)}
+            onChange={(e) => {
+                i18n.changeLanguage(e.target.value);
+                dayjs.locale(e.target.value);
+            }}
             IconComponent={StyledExpandMoreIcon}
             startAdornment={
                 <InputAdornment position="start">

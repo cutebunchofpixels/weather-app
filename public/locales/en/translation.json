@@ -1,5 +1,9 @@
 {
     "locationAutocomplete.placeholder": "Enter city name",
     "locationAutocomplete.noOptions": "No location suggestions",
-    "locationAutocomplete.addButton": "Add"
+    "locationAutocomplete.addButton": "Add",
+    "weatherCard.wind": "Wind",
+    "weatherCard.humidity": "Humidity",
+    "weatherCard.pressure": "Pressure",
+    "weatherCard.feelsLike": "Feels like"
 }

@@ -21,9 +21,6 @@ export default function DailyForecastChart({
     const displayValues = [0, ...values, 0];
     const displayCaptions = ["", ...captions, ""];
 
-    console.log(values);
-    console.log(displayValues, displayCaptions);
-
     const theme = useTheme();
 
     return (

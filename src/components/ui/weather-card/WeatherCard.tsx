@@ -9,9 +9,12 @@ import {
     RequestPart,
 } from "../../../types/dto/WeatherForecastDTO";
 import { measurementSystemUnits } from "../../../utils/measurement-system-units";
-import dayjs from "dayjs";
+import { dayjs } from "../../../utils/dayjs";
 import { formatSigned } from "../../../utils/format-signed";
 import { useGetWeatherForecastQuery } from "../../../redux/app/api/endpoints/weather/weatherApi";
+import { dummyWeatherForecast } from "./dummy-weather-forecast";
+import { useTranslation } from "react-i18next";
+import { capitalize } from "../../../utils/capitalize";
 
 const Container = styled(Box, {
     shouldForwardProp: (propName) => propName !== "temp",
@@ -28,6 +31,7 @@ const Container = styled(Box, {
 }));
 
 export default function WeatherCard({ place }: { place: Place }) {
+    const { t, i18n } = useTranslation();
     const preferredUnitsJSON = localStorage.getItem("preferredUnits");
     let preferredUnits: MeasurementSystem = MeasurementSystem.Metric;
 
@@ -41,11 +45,17 @@ export default function WeatherCard({ place }: { place: Place }) {
             lon: place.lng,
             exclude: [RequestPart.Hourly],
             units: preferredUnits,
+            lang: i18n.resolvedLanguage,
         });
 
     if (isCurrentForecastFetching || !weatherForecast) {
         return <Container temp={10}>Loading...</Container>;
     }
+
+    const currentDate = dayjs
+        .unix(weatherForecast.current.dt)
+        .utc()
+        .tz(weatherForecast.timezone);
 
     return (
         <Container temp={weatherForecast.current.temp}>
@@ -73,9 +83,7 @@ export default function WeatherCard({ place }: { place: Place }) {
                         )}
                     </Typography>
                     <Typography fontSize="18px" fontWeight="300">
-                        {dayjs
-                            .unix(weatherForecast.current.dt)
-                            .format("ddd, DD MMMM, HH:mm")}
+                        {currentDate.format("ddd, DD MMMM, HH:mm")}
                     </Typography>
                 </Box>
                 <Box
@@ -102,7 +110,9 @@ export default function WeatherCard({ place }: { place: Place }) {
                             src={`${process.env.REACT_APP_OPEN_WEATHER_API_IMG_URL}/${weatherForecast.current.weather[0].icon}@2x.png`}
                         />
                         <Typography fontSize="13px" color="gray.main">
-                            {weatherForecast.current.weather[0].main}
+                            {capitalize(
+                                weatherForecast.current.weather[0].description
+                            )}
                         </Typography>
                     </Box>
                 </Box>
@@ -112,7 +122,7 @@ export default function WeatherCard({ place }: { place: Place }) {
                     values={weatherForecast.daily.map((value) =>
                         Math.round(value.temp.max)
                     )}
-                    startDay={dayjs.unix(weatherForecast.current.dt)}
+                    startDay={currentDate}
                 />
             </Box>
             <Box
@@ -125,11 +135,14 @@ export default function WeatherCard({ place }: { place: Place }) {
             >
                 <Box>
                     <Box
+                        dir="ltr"
                         sx={{
                             display: "flex",
                             flexDirection: "row",
                             gap: "5px",
                             mt: "17px",
+                            justifyContent:
+                                i18n.dir() === "rtl" ? "end" : "start",
                         }}
                     >
                         <Typography fontSize="44px">
@@ -148,7 +161,7 @@ export default function WeatherCard({ place }: { place: Place }) {
                         </Box>
                     </Box>
                     <WeatherMeasurementBagde
-                        measurement="Feels like"
+                        measurement={t("weatherCard.feelsLike")}
                         value={formatSigned(weatherForecast.current.feels_like)}
                         unit={
                             measurementSystemUnits[preferredUnits].temperature
@@ -165,21 +178,21 @@ export default function WeatherCard({ place }: { place: Place }) {
                     }}
                 >
                     <WeatherMeasurementBagde
-                        measurement="Wind"
+                        measurement={t("weatherCard.wind")}
                         value={weatherForecast.current.wind_speed.toString()}
                         unit={measurementSystemUnits[preferredUnits].speed}
                         highlightColor="orange.main"
                         mainColor="#000"
                     />
                     <WeatherMeasurementBagde
-                        measurement="Humidity"
+                        measurement={t("weatherCard.humidity")}
                         value={weatherForecast.current.humidity.toString()}
                         unit={measurementSystemUnits[preferredUnits].humidity}
                         highlightColor="orange.main"
                         mainColor="#000"
                     />
                     <WeatherMeasurementBagde
-                        measurement="Pressure"
+                        measurement={t("weatherCard.pressure")}
                         value={(
                             weatherForecast.current.pressure * 100
                         ).toString()}

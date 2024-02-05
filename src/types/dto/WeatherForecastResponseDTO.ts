@@ -2,6 +2,7 @@ import { Weather } from "../models/Weather";
 
 export interface WeatherForecastResponseDTO {
     timezone_offset: number;
+    timezone: string;
 
     current: {
         dt: number;

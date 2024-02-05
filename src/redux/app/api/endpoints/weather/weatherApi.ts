@@ -9,15 +9,15 @@ export const weatherAPI = openWeatherAPISlice.injectEndpoints({
                 WeatherForecastResponseDTO,
                 WeatherForecastDTO
             >({
-                query({ lat, lon, units, exclude }) {
+                query({ lat, lon, units, exclude, lang }) {
                     const excludeString = exclude
                         ? `&exclude=${exclude.join(",")}`
                         : "";
 
-                    console.log(excludeString);
-
                     return {
-                        url: `?lat=${lat}&lon=${lon}${excludeString}&units=${units}&appid=${process.env.REACT_APP_OPEN_WEATHER_API_KEY}`,
+                        url: `?lat=${lat}&lon=${lon}${excludeString}&units=${units}${
+                            lang && `&lang=${lang}`
+                        }&appid=${process.env.REACT_APP_OPEN_WEATHER_API_KEY}`,
                     };
                 },
             }),

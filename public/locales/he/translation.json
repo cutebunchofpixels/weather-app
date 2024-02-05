@@ -1,5 +1,9 @@
 {
     "locationAutocomplete.placeholder": "הזן את שם העיר",
     "locationAutocomplete.noOptions": "אין הצעות מיקום",
-    "locationAutocomplete.addButton": "לְהוֹסִיף"
+    "locationAutocomplete.addButton": "לְהוֹ,סִיף",
+    "weatherCard.wind": "רוּחַ",
+    "weatherCard.humidity": "לחות",
+    "weatherCard.pressure": "לַחַץ",
+    "weatherCard.feelsLike": "מרגיש כמו"
 }

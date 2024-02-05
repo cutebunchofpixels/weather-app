@@ -5,7 +5,7 @@ import WeatherCardList from "../../layout/weather-card-list/WeatherCardList";
 import { useAppSelector } from "../../../redux/app/hooks";
 
 export default function Home() {
-    const places = useAppSelector((state) => state.places.places);
+    const places = useAppSelector((state) => state.places.value);
 
     return (
         <Box sx={{ display: "flex", flexDirection: "column", flexGrow: "1" }}>

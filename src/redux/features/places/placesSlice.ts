@@ -2,11 +2,11 @@ import { PayloadAction, createSlice } from "@reduxjs/toolkit";
 import { Place } from "../../../types/models/Place";
 
 interface PlacesState {
-    places: Place[];
+    value: Place[];
 }
 
 const initialState: PlacesState = {
-    places: [],
+    value: [],
 };
 
 const placesSlice = createSlice({
@@ -14,16 +14,16 @@ const placesSlice = createSlice({
     initialState,
     reducers: {
         addPlace(state, action: PayloadAction<Place>) {
-            state.places.unshift(action.payload);
+            state.value.unshift(action.payload);
         },
 
         removePlace(state, action: PayloadAction<string>) {
             const placeId = action.payload;
-            const removePlaceIndex = state.places.findIndex(
+            const removePlaceIndex = state.value.findIndex(
                 (place) => place.placeId === placeId
             );
 
-            state.places.splice(removePlaceIndex, 1);
+            state.value.splice(removePlaceIndex, 1);
         },
     },
 });

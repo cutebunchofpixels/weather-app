@@ -1,5 +1,11 @@
 import CloseIcon from "@mui/icons-material/Close";
-import { Box, ButtonBase, IconButton, Typography } from "@mui/material";
+import {
+    Box,
+    ButtonBase,
+    CircularProgress,
+    IconButton,
+    Typography,
+} from "@mui/material";
 import { styled } from "@mui/material/styles";
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
@@ -98,7 +104,16 @@ export default function WeatherCard({ place }: { place: Place }) {
         });
 
     if (isCurrentForecastFetching || !weatherForecast) {
-        return <Container isTempFreezing={false}>Loading...</Container>;
+        return (
+            <Container isTempFreezing={false}>
+                <Box sx={{ m: "auto", py: "100px" }}>
+                    <CircularProgress
+                        size="30px"
+                        sx={{ color: "orange.main" }}
+                    />
+                </Box>
+            </Container>
+        );
     }
 
     const isTempFreezing =
@@ -163,7 +178,6 @@ export default function WeatherCard({ place }: { place: Place }) {
                     <Box
                         sx={{
                             display: "flex",
-                            marginInlineEnd: "16px",
                         }}
                     >
                         <Box
@@ -180,6 +194,8 @@ export default function WeatherCard({ place }: { place: Place }) {
                             fontSize="13px"
                             color="gray.main"
                             maxWidth="65px"
+                            paddingRight="10px"
+                            lineHeight="1"
                         >
                             {capitalize(
                                 weatherForecast.current.weather[0].description

@@ -374,7 +374,7 @@ export const dummyWeatherForecast = {
         dt: 1707092895,
         sunrise: 1707048215,
         sunset: 1707084971,
-        temp: 4.35,
+        temp: -10,
         feels_like: 1.31,
         pressure: 1014,
         humidity: 53,
@@ -964,3 +964,4 @@ export const dummyWeatherForecast = {
         },
     ],
 };
+

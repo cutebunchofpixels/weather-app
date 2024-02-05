@@ -1,7 +1,7 @@
 import { Chart, ScriptableContext, registerables } from "chart.js";
 import ChartDataLabels from "chartjs-plugin-datalabels";
 import { Line } from "react-chartjs-2";
-import { useTheme } from "@mui/material";
+import { useTheme, alpha } from "@mui/material";
 import { Dayjs } from "dayjs";
 
 Chart.register(...registerables, ChartDataLabels);
@@ -9,11 +9,13 @@ Chart.register(...registerables, ChartDataLabels);
 interface DailyForecastChartProps {
     values: number[];
     startDay: Dayjs;
+    isTempFreezing: boolean;
 }
 
 export default function DailyForecastChart({
     values,
     startDay,
+    isTempFreezing,
 }: DailyForecastChartProps) {
     const captions: string[] = values.map((value, index) =>
         startDay.startOf("day").add(index, "day").format("DD.MM")
@@ -120,9 +122,13 @@ export default function DailyForecastChart({
                                 bottom
                             );
 
+                            const backgroundColor = isTempFreezing
+                                ? theme.palette.blue.main
+                                : theme.palette.orange.main;
+
                             gradientBg.addColorStop(
                                 0,
-                                "rgba(255, 162, 91, .3)"
+                                alpha(backgroundColor, 0.3)
                             );
                             gradientBg.addColorStop(
                                 0.85,

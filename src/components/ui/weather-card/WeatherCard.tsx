@@ -18,9 +18,10 @@ import { capitalize } from "../../../utils/capitalize";
 
 const Container = styled(Box, {
     shouldForwardProp: (propName) => propName !== "temp",
-})<{ temp: number }>(({ theme, temp }) => ({
-    backgroundColor:
-        temp > 0 ? theme.palette.orange.light : theme.palette.blue.light,
+})<{ isTempFreezing: boolean }>(({ theme, isTempFreezing }) => ({
+    backgroundColor: isTempFreezing
+        ? theme.palette.blue.light
+        : theme.palette.orange.light,
     height: "257px",
     width: "350px",
     boxShadow: theme.shadows[1],
@@ -49,8 +50,14 @@ export default function WeatherCard({ place }: { place: Place }) {
         });
 
     if (isCurrentForecastFetching || !weatherForecast) {
-        return <Container temp={10}>Loading...</Container>;
+        return <Container isTempFreezing={false}>Loading...</Container>;
     }
+
+    const isTempFreezing =
+        (preferredUnits === MeasurementSystem.Metric &&
+            weatherForecast.current.temp <= 0) ||
+        (preferredUnits === MeasurementSystem.Imperial &&
+            weatherForecast.current.temp <= 32);
 
     const currentDate = dayjs
         .unix(weatherForecast.current.dt)
@@ -58,7 +65,7 @@ export default function WeatherCard({ place }: { place: Place }) {
         .tz(weatherForecast.timezone);
 
     return (
-        <Container temp={weatherForecast.current.temp}>
+        <Container isTempFreezing={isTempFreezing}>
             <IconButton
                 sx={{
                     padding: 0,
@@ -123,6 +130,7 @@ export default function WeatherCard({ place }: { place: Place }) {
                         Math.round(value.temp.max)
                     )}
                     startDay={currentDate}
+                    isTempFreezing={isTempFreezing}
                 />
             </Box>
             <Box
@@ -181,14 +189,18 @@ export default function WeatherCard({ place }: { place: Place }) {
                         measurement={t("weatherCard.wind")}
                         value={weatherForecast.current.wind_speed.toString()}
                         unit={measurementSystemUnits[preferredUnits].speed}
-                        highlightColor="orange.main"
+                        highlightColor={
+                            isTempFreezing ? "blue.main" : "orange.main"
+                        }
                         mainColor="#000"
                     />
                     <WeatherMeasurementBagde
                         measurement={t("weatherCard.humidity")}
                         value={weatherForecast.current.humidity.toString()}
                         unit={measurementSystemUnits[preferredUnits].humidity}
-                        highlightColor="orange.main"
+                        highlightColor={
+                            isTempFreezing ? "blue.main" : "orange.main"
+                        }
                         mainColor="#000"
                     />
                     <WeatherMeasurementBagde
@@ -197,7 +209,9 @@ export default function WeatherCard({ place }: { place: Place }) {
                             weatherForecast.current.pressure * 100
                         ).toString()}
                         unit={measurementSystemUnits[preferredUnits].pressure}
-                        highlightColor="orange.main"
+                        highlightColor={
+                            isTempFreezing ? "blue.main" : "orange.main"
+                        }
                         mainColor="#000"
                     />
                 </Box>

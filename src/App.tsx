@@ -13,6 +13,7 @@ import { defaultTheme } from "./utils/theme";
 import { Provider } from "react-redux";
 import { persistor, store } from "./redux/app/store";
 import { PersistGate } from "redux-persist/integration/react";
+import FullScreenLoader from "./components/ui/loader/FullScreenLoader";
 
 const rtlCache = createCache({
     key: "muirtl",
@@ -39,9 +40,9 @@ function App() {
         <CacheProvider value={i18n.dir() === "ltr" ? ltrCache : rtlCache}>
             <ThemeProvider theme={theme}>
                 <CssBaseline />
-                <Suspense fallback={<div>Loading...</div>}>
+                <Suspense fallback={<FullScreenLoader />}>
                     <PersistGate
-                        loading={<div>Loading...</div>}
+                        loading={<FullScreenLoader />}
                         persistor={persistor}
                     >
                         <Box

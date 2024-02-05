@@ -1,5 +1,5 @@
 import CloseIcon from "@mui/icons-material/Close";
-import { Box, IconButton, Typography } from "@mui/material";
+import { Box, ButtonBase, IconButton, Typography } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import { Place } from "../../../types/models/Place";
 import DailyForecastChart from "./DailyForecarsChart";
@@ -15,9 +15,10 @@ import { useGetWeatherForecastQuery } from "../../../redux/app/api/endpoints/wea
 import { dummyWeatherForecast } from "./dummy-weather-forecast";
 import { useTranslation } from "react-i18next";
 import { capitalize } from "../../../utils/capitalize";
+import { useState } from "react";
 
 const Container = styled(Box, {
-    shouldForwardProp: (propName) => propName !== "temp",
+    shouldForwardProp: (propName) => propName !== "isTempFreezing",
 })<{ isTempFreezing: boolean }>(({ theme, isTempFreezing }) => ({
     backgroundColor: isTempFreezing
         ? theme.palette.blue.light
@@ -31,14 +32,27 @@ const Container = styled(Box, {
     flexDirection: "column",
 }));
 
+const UnitsToggleButton = styled(ButtonBase, {
+    shouldForwardProp: (propName) => propName !== "isActive",
+})<{ isActive: Boolean }>(({ theme, isActive }) => ({
+    fontSize: "22px",
+    color: isActive ? "#000" : theme.palette.gray.main,
+}));
+
+function getPreferredUnits(placeId: string) {
+    const preferredUnitsJSON = localStorage.getItem("preferredUnits");
+    if (!preferredUnitsJSON) {
+        return MeasurementSystem.Metric;
+    }
+
+    return JSON.parse(preferredUnitsJSON)[placeId];
+}
+
 export default function WeatherCard({ place }: { place: Place }) {
     const { t, i18n } = useTranslation();
-    const preferredUnitsJSON = localStorage.getItem("preferredUnits");
-    let preferredUnits: MeasurementSystem = MeasurementSystem.Metric;
-
-    if (preferredUnitsJSON) {
-        preferredUnits = JSON.parse(preferredUnitsJSON)[place.placeId];
-    }
+    const [preferredUnits, setPreferredUnits] = useState<MeasurementSystem>(
+        () => getPreferredUnits(place.placeId)
+    );
 
     const { data: weatherForecast, isFetching: isCurrentForecastFetching } =
         useGetWeatherForecastQuery({
@@ -63,6 +77,22 @@ export default function WeatherCard({ place }: { place: Place }) {
         .unix(weatherForecast.current.dt)
         .utc()
         .tz(weatherForecast.timezone);
+
+    function handlePreferredUnitsToggle(newValue: MeasurementSystem) {
+        const preferredUnitsJSON = localStorage.getItem("preferredUnits");
+        let preferredUnits = {};
+
+        if (preferredUnitsJSON) {
+            preferredUnits = JSON.parse(preferredUnitsJSON);
+        }
+
+        localStorage.setItem(
+            "preferredUnits",
+            JSON.stringify({ ...preferredUnits, [place.placeId]: newValue })
+        );
+
+        setPreferredUnits(newValue);
+    }
 
     return (
         <Container isTempFreezing={isTempFreezing}>
@@ -161,11 +191,39 @@ export default function WeatherCard({ place }: { place: Place }) {
                                 display: "flex",
                                 flexDirection: "row",
                                 gap: "10px",
+                                alignItems: "start",
                             }}
                         >
-                            <Typography fontSize="22px">&deg;C</Typography>
-                            <Typography fontSize="22px">|</Typography>
-                            <Typography fontSize="22px">&deg;F</Typography>
+                            <UnitsToggleButton
+                                disableRipple
+                                isActive={
+                                    preferredUnits === MeasurementSystem.Metric
+                                }
+                                onClick={() =>
+                                    handlePreferredUnitsToggle(
+                                        MeasurementSystem.Metric
+                                    )
+                                }
+                            >
+                                &deg;C
+                            </UnitsToggleButton>
+                            <Typography fontSize="22px" lineHeight="1">
+                                |
+                            </Typography>
+                            <UnitsToggleButton
+                                disableRipple
+                                isActive={
+                                    preferredUnits ===
+                                    MeasurementSystem.Imperial
+                                }
+                                onClick={() =>
+                                    handlePreferredUnitsToggle(
+                                        MeasurementSystem.Imperial
+                                    )
+                                }
+                            >
+                                &deg;F
+                            </UnitsToggleButton>
                         </Box>
                     </Box>
                     <WeatherMeasurementBagde

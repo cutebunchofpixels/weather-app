@@ -1,23 +1,25 @@
 import CloseIcon from "@mui/icons-material/Close";
 import { Box, ButtonBase, IconButton, Typography } from "@mui/material";
 import { styled } from "@mui/material/styles";
-import { Place } from "../../../types/models/Place";
-import DailyForecastChart from "./DailyForecarsChart";
-import WeatherMeasurementBagde from "./WeatherMeasurementBadge";
+import { useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
+import { GeocodeResult } from "use-places-autocomplete";
+import { useAppDispatch } from "../../../redux/app/hooks";
+import { removePlace } from "../../../redux/features/places/placesSlice";
 import {
     MeasurementSystem,
     RequestPart,
 } from "../../../types/dto/WeatherForecastDTO";
-import { measurementSystemUnits } from "../../../utils/measurement-system-units";
+import { Place } from "../../../types/models/Place";
+import { capitalize } from "../../../utils/capitalize";
 import { dayjs } from "../../../utils/dayjs";
 import { formatSigned } from "../../../utils/format-signed";
-import { useGetWeatherForecastQuery } from "../../../redux/app/api/endpoints/weather/weatherApi";
+import { getCachedGeocode } from "../../../utils/getCachedGeocode";
+import { measurementSystemUnits } from "../../../utils/measurement-system-units";
+import DailyForecastChart from "./DailyForecarsChart";
+import WeatherMeasurementBagde from "./WeatherMeasurementBadge";
 import { dummyWeatherForecast } from "./dummy-weather-forecast";
-import { useTranslation } from "react-i18next";
-import { capitalize } from "../../../utils/capitalize";
-import { useState } from "react";
-import { useAppDispatch } from "../../../redux/app/hooks";
-import { removePlace } from "../../../redux/features/places/placesSlice";
+import { useGetWeatherForecastQuery } from "../../../redux/app/api/endpoints/weather/weatherApi";
 
 const Container = styled(Box, {
     shouldForwardProp: (propName) => propName !== "isTempFreezing",
@@ -50,12 +52,41 @@ function getPreferredUnits(placeId: string) {
     return JSON.parse(preferredUnitsJSON)[placeId] || MeasurementSystem.Metric;
 }
 
+function formatCardTitle(geocodeResult: GeocodeResult | undefined) {
+    if (!geocodeResult) {
+        return "Loading";
+    }
+
+    const cityName = geocodeResult.address_components.find((component) =>
+        component.types.includes("locality")
+    );
+    const countryName = geocodeResult.address_components.find((component) =>
+        component.types.includes("country")
+    );
+
+    return [cityName?.long_name, countryName?.short_name]
+        .filter((x) => Boolean(x))
+        .join(", ");
+}
+
 export default function WeatherCard({ place }: { place: Place }) {
+    const [geocodeResult, setGeocodeResults] = useState<
+        GeocodeResult | undefined
+    >(undefined);
     const { t, i18n } = useTranslation();
     const dispatch = useAppDispatch();
     const [preferredUnits, setPreferredUnits] = useState<MeasurementSystem>(
         () => getPreferredUnits(place.placeId)
     );
+
+    useEffect(() => {
+        getCachedGeocode({
+            placeId: place.placeId,
+            language: i18n.resolvedLanguage,
+        }).then((result) => setGeocodeResults(result));
+    }, [i18n.resolvedLanguage, place.placeId]);
+
+    console.log(geocodeResult);
 
     const { data: weatherForecast, isFetching: isCurrentForecastFetching } =
         useGetWeatherForecastQuery({
@@ -117,12 +148,7 @@ export default function WeatherCard({ place }: { place: Place }) {
             </IconButton>
             <Box sx={{ display: "grid", gridTemplateColumns: "1fr auto" }}>
                 <Box>
-                    <Typography>
-                        {place.description.slice(
-                            0,
-                            place.description.indexOf(",")
-                        )}
-                    </Typography>
+                    <Typography>{formatCardTitle(geocodeResult)}</Typography>
                     <Typography fontSize="18px" fontWeight="300">
                         {currentDate.format("ddd, DD MMMM, HH:mm")}
                     </Typography>

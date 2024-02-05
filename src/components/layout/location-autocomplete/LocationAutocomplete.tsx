@@ -7,15 +7,13 @@ import {
     styled,
 } from "@mui/material";
 import { useState } from "react";
-import usePlacesAutocomplete, {
-    getGeocode,
-    getLatLng,
-} from "use-places-autocomplete";
-import { Place } from "../../../types/models/Place";
 import { useTranslation } from "react-i18next";
+import usePlacesAutocomplete, { getLatLng } from "use-places-autocomplete";
 import { useAppDispatch } from "../../../redux/app/hooks";
 import { addPlace } from "../../../redux/features/places/placesSlice";
 import { ArrayElement } from "../../../types/helpers/ArrayElement";
+import { Place } from "../../../types/models/Place";
+import { getCachedGeocode } from "../../../utils/getCachedGeocode";
 
 const StyledInput = styled(InputBase)(({ theme }) => ({
     "& .MuiInputBase-input": {
@@ -29,7 +27,7 @@ type AutocompletePrediction = ArrayElement<
 >;
 
 export default function LocationAutocomplete() {
-    const { t } = useTranslation();
+    const { t, i18n } = useTranslation();
     const [selectedPlace, setSelectedPlace] =
         useState<AutocompletePrediction | null>(null);
     const dispatch = useAppDispatch();
@@ -50,15 +48,15 @@ export default function LocationAutocomplete() {
             onSubmit={async (e) => {
                 e.preventDefault();
 
-                const results = await getGeocode({
+                const geocodeResult = await getCachedGeocode({
                     placeId: selectedPlace!.place_id,
+                    language: i18n.resolvedLanguage,
                 });
 
-                const { lat, lng } = getLatLng(results[0]);
+                const { lat, lng } = getLatLng(geocodeResult);
 
                 const newPlace: Place = {
                     placeId: selectedPlace!.place_id,
-                    description: selectedPlace!.description,
                     lat,
                     lng,
                 };

@@ -57,7 +57,7 @@ export default function Home() {
         );
 
         isInitizalizedWithUserLocation.current = true;
-        localStorage.setItem("isInit", "true");
+        localStorage.setItem(LOCAL_STORAGE_LOCATION_INIT_KEY, "true");
     }, []);
 
     return (

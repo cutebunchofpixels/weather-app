@@ -37,7 +37,6 @@ export default function Home() {
             );
 
             if (!placeData) {
-                console.log("No results");
                 return;
             }
 

@@ -91,8 +91,6 @@ export default function WeatherCard({ place }: { place: Place }) {
         }).then((result) => setGeocodeResults(result));
     }, [i18n.resolvedLanguage, place.placeId]);
 
-    console.log(geocodeResult);
-
     const { data: weatherForecast, isFetching: isCurrentForecastFetching } =
         useGetWeatherForecastQuery({
             lat: place.lat,

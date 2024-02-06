@@ -31,10 +31,13 @@ export default function Home() {
         const geocoder = new google.maps.Geocoder();
         const geocodeResponse = await geocodeLatLng(geocoder, lat, lng);
 
-        const placeData = geocodeResponse.results[0];
+        const placeData = geocodeResponse.results.find((result) =>
+            result.types.includes("locality")
+        );
 
         if (!placeData) {
             console.log("No results");
+            return;
         }
 
         const newPlace: Place = {

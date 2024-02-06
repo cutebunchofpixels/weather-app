@@ -9,7 +9,7 @@ import {
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import usePlacesAutocomplete, { getLatLng } from "use-places-autocomplete";
-import { useAppDispatch } from "../../../redux/app/hooks";
+import { useAppDispatch, useAppSelector } from "../../../redux/app/hooks";
 import { addPlace } from "../../../redux/features/places/placesSlice";
 import { ArrayElement } from "../../../types/helpers/ArrayElement";
 import { Place } from "../../../types/models/Place";
@@ -31,6 +31,8 @@ export default function LocationAutocomplete() {
     const [selectedPlace, setSelectedPlace] =
         useState<AutocompletePrediction | null>(null);
     const dispatch = useAppDispatch();
+    const places = useAppSelector((state) => state.places.value);
+    const placeIds = places.map((place) => place.placeId);
 
     const {
         value,
@@ -75,13 +77,18 @@ export default function LocationAutocomplete() {
                 <Autocomplete
                     value={selectedPlace}
                     disableClearable={selectedPlace !== null}
+                    includeInputInList
                     inputValue={value}
                     options={data}
                     forcePopupIcon={false}
                     filterOptions={(o) => o}
                     getOptionLabel={(option) => option.description}
                     noOptionsText={t("locationAutocomplete.noOptions")}
-                    onInputChange={(e, newInputValue) => {
+                    onInputChange={(e, newInputValue, reason) => {
+                        if (newInputValue === "") {
+                            setSelectedPlace(null);
+                        }
+
                         setValue(newInputValue);
                     }}
                     onChange={async (e, newValue) => {
@@ -126,7 +133,10 @@ export default function LocationAutocomplete() {
                 <Button
                     type="submit"
                     variant="contained"
-                    disabled={selectedPlace === null}
+                    disabled={
+                        selectedPlace === null ||
+                        placeIds.includes(selectedPlace.place_id)
+                    }
                     sx={{
                         textTransform: "none",
                         py: "10px",

@@ -53,13 +53,13 @@ export default function LanguageSwitcher() {
         >
             {languages.map((language) => (
                 <MenuItem
-                    value={language}
-                    key={language}
-                    disabled={i18n.resolvedLanguage === language}
+                    value={language.code}
+                    key={language.code}
+                    disabled={i18n.resolvedLanguage === language.code}
                     sx={{ px: "3px", py: "5px" }}
                 >
                     <Typography sx={{ textTransform: "uppercase" }}>
-                        {language}
+                        {language.displayName || language.code}
                     </Typography>
                 </MenuItem>
             ))}

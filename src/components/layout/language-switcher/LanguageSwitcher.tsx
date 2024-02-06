@@ -32,7 +32,7 @@ export default function LanguageSwitcher() {
             sx={{
                 "& fieldset": { border: "none" },
                 "& .MuiSvgIcon-root": { color: "gray.main" },
-                minWidth: "3.62rem",
+                minWidth: "58px",
                 padding: 0,
                 color: "gray.main",
             }}

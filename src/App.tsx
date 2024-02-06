@@ -49,7 +49,7 @@ function App() {
                             sx={{
                                 display: "flex",
                                 minHeight: "100vh",
-                                padding: "1.5rem",
+                                padding: "25px",
                             }}
                         >
                             <Provider store={store}>

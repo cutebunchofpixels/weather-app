@@ -34,7 +34,7 @@ function App() {
     const theme = useMemo(() => {
         const theme = { ...defaultTheme, direction: i18n.dir() };
         return theme;
-    }, []);
+    }, [i18n]);
 
     return (
         <CacheProvider value={i18n.dir() === "ltr" ? ltrCache : rtlCache}>

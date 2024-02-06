@@ -24,7 +24,6 @@ import { getCachedGeocode } from "../../../utils/getCachedGeocode";
 import { measurementSystemUnits } from "../../../utils/measurement-system-units";
 import DailyForecastChart from "./DailyForecarsChart";
 import WeatherMeasurementBagde from "./WeatherMeasurementBadge";
-import { dummyWeatherForecast } from "./dummy-weather-forecast";
 import { useGetWeatherForecastQuery } from "../../../redux/app/api/endpoints/weather/weatherApi";
 
 const Container = styled(Box, {

@@ -4,7 +4,7 @@ import LocationAutocomplete from "../../layout/location-autocomplete/LocationAut
 import WeatherCardList from "../../layout/weather-card-list/WeatherCardList";
 import { useAppDispatch, useAppSelector } from "../../../redux/app/hooks";
 import { Place } from "../../../types/models/Place";
-import { useEffect, useRef } from "react";
+import { useCallback, useEffect, useRef } from "react";
 import { addPlace } from "../../../redux/features/places/placesSlice";
 import { LOCAL_STORAGE_LOCATION_INIT_KEY } from "../../../utils/constants";
 
@@ -26,28 +26,31 @@ export default function Home() {
     isInitizalizedWithUserLocation.current =
         localStorage.getItem(LOCAL_STORAGE_LOCATION_INIT_KEY) === "true";
 
-    async function geolocationSuccess(position: GeolocationPosition) {
-        const { latitude: lat, longitude: lng } = position.coords;
-        const geocoder = new google.maps.Geocoder();
-        const geocodeResponse = await geocodeLatLng(geocoder, lat, lng);
+    const geolocationSuccess = useCallback(
+        async function geolocationSuccess(position: GeolocationPosition) {
+            const { latitude: lat, longitude: lng } = position.coords;
+            const geocoder = new google.maps.Geocoder();
+            const geocodeResponse = await geocodeLatLng(geocoder, lat, lng);
 
-        const placeData = geocodeResponse.results.find((result) =>
-            result.types.includes("locality")
-        );
+            const placeData = geocodeResponse.results.find((result) =>
+                result.types.includes("locality")
+            );
 
-        if (!placeData) {
-            console.log("No results");
-            return;
-        }
+            if (!placeData) {
+                console.log("No results");
+                return;
+            }
 
-        const newPlace: Place = {
-            placeId: placeData.place_id,
-            lat: lat,
-            lng: lng,
-        };
+            const newPlace: Place = {
+                placeId: placeData.place_id,
+                lat: lat,
+                lng: lng,
+            };
 
-        dispatch(addPlace(newPlace));
-    }
+            dispatch(addPlace(newPlace));
+        },
+        [dispatch]
+    );
 
     useEffect(() => {
         if (isInitizalizedWithUserLocation.current || !navigator.geolocation) {
@@ -61,7 +64,7 @@ export default function Home() {
 
         isInitizalizedWithUserLocation.current = true;
         localStorage.setItem(LOCAL_STORAGE_LOCATION_INIT_KEY, "true");
-    }, []);
+    }, [geolocationSuccess]);
 
     return (
         <Box sx={{ display: "flex", flexDirection: "column", flexGrow: "1" }}>

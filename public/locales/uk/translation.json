@@ -1,0 +1,11 @@
+{
+    "locationAutocomplete.placeholder": "Введіть назву міста",
+    "locationAutocomplete.noOptions": "Немає підказок",
+    "locationAutocomplete.addButton": "Додати",
+    "weatherCard.wind": "Вітер",
+    "weatherCard.humidity": "Вологість",
+    "weatherCard.pressure": "Тиск",
+    "weatherCard.feelsLike": "Відчувається як",
+    "weatherCardList.noPlaces": "Поки що нічого відображати. Спробуйте додати місто використовуючи поле вгорі!",
+    "loading": "Завантаження"
+}

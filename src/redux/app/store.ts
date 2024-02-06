@@ -21,6 +21,7 @@ const rootReducer = combineReducers({
 const persistConfig = {
     key: "root",
     storage,
+    blacklist: [openWeatherAPISlice.reducerPath],
 };
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);
@@ -46,3 +47,4 @@ export const persistor = persistStore(store);
 
 export type AppDispatch = typeof store.dispatch;
 export type RootState = ReturnType<typeof store.getState>;
+

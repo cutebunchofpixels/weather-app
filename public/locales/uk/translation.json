@@ -6,5 +6,6 @@
     "weatherCard.humidity": "Вологість",
     "weatherCard.pressure": "Тиск",
     "weatherCard.feelsLike": "Відчувається як",
-    "weatherCardList.noPlaces": "Поки що нічого відображати. Спробуйте додати місто використовуючи поле вгорі!"
+    "weatherCardList.noPlaces": "Поки що нічого відображати. Спробуйте додати місто використовуючи поле вгорі!",
+    "loading": "Завантаження"
 }

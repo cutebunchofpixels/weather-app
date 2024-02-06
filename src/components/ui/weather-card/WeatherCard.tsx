@@ -57,9 +57,12 @@ function getPreferredUnits(placeId: string) {
     return JSON.parse(preferredUnitsJSON)[placeId] || MeasurementSystem.Metric;
 }
 
-function formatCardTitle(geocodeResult: GeocodeResult | undefined) {
+function formatCardTitle(
+    geocodeResult: GeocodeResult | undefined,
+    fallbackCaption: string
+) {
     if (!geocodeResult) {
-        return "Loading";
+        return fallbackCaption;
     }
 
     const cityName = geocodeResult.address_components.find((component) =>
@@ -160,7 +163,9 @@ export default function WeatherCard({ place }: { place: Place }) {
             </IconButton>
             <Box sx={{ display: "grid", gridTemplateColumns: "1fr auto" }}>
                 <Box>
-                    <Typography>{formatCardTitle(geocodeResult)}</Typography>
+                    <Typography>
+                        {formatCardTitle(geocodeResult, t("loading"))}
+                    </Typography>
                     <Typography fontSize="18px" fontWeight="300">
                         {currentDate.format("ddd, DD MMMM, HH:mm")}
                     </Typography>
